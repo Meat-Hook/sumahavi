@@ -35,6 +35,8 @@ type Container interface {
 	Name() string
 	// Logs returns channel for collecting log lines.
 	//
+	// If you don't read this channel parser won't parse data.
+	//
 	// This method must be called. Repeated calls returns the same channel.
 	// Returned channel is non-blocking on send, closes by Close.
 	//
