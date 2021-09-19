@@ -12,4 +12,5 @@ var _ core.UUID = &Service{}
 type Service struct{}
 
 // New implements core.UUID.
-func (s *Service) New() uuid.UUID { panic("implement me") }
+// It uses must because there isn't chance for getting error.
+func (s *Service) New() uuid.UUID { return uuid.Must(uuid.NewV4()) }

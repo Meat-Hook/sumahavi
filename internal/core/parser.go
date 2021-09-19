@@ -20,7 +20,7 @@ func (c *Core) Start(ctx context.Context) error {
 	errc := make(chan error)
 	for {
 		select {
-		// Get new file for parsing.
+		// Get new container for staring parse.
 		case container := <-c.source.New():
 			wg.Add(1)
 			go func() {
