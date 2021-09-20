@@ -30,9 +30,6 @@ type Tokenizer interface {
 
 // Container contains log file.
 type Container interface {
-	// Name returns container name.
-	// It can be file name or for example link to source on another service.
-	Name() string
 	// Logs returns channel for collecting log lines.
 	//
 	// If you don't read this channel parser won't parse data.
@@ -77,6 +74,8 @@ type Store interface {
 
 // Source responsible for getting log journal.
 type Source interface {
+	// Name returns source name.
+	Name() string
 	// Close source. You shouldn't use Source after close.
 	// Also, it will close all channels returned by other methods.
 	Close()

@@ -10,23 +10,23 @@ import (
 
 // Start runs container.
 // Will start survey and parsing log data from directory.
-func (c *Core) Start(ctx context.Context) error {
+func (c *Core) Start(ctx context.Context, source Source) error {
 	var wg sync.WaitGroup
 	defer func() {
 		wg.Wait()
-		c.source.Close()
+		source.Close()
 	}()
 
 	errc := make(chan error)
 	for {
 		select {
 		// Get new container for staring parse.
-		case container := <-c.source.New():
+		case container := <-source.New():
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
 
-				err := c.parse(ctx, container)
+				err := c.parse(ctx, source.Name(), container)
 				if err != nil {
 					errc <- fmt.Errorf("c.parse: %w", err)
 				}
@@ -36,13 +36,13 @@ func (c *Core) Start(ctx context.Context) error {
 		// If we get error, we will close all out channels and finished this function.
 		case err := <-errc:
 			return err
-		case err := <-c.source.Err():
+		case err := <-source.Err():
 			return err
 		}
 	}
 }
 
-func (c *Core) parse(ctx context.Context, container Container) error {
+func (c *Core) parse(ctx context.Context, sourceName string, container Container) error {
 	defer container.Close()
 
 	for {
@@ -51,6 +51,7 @@ func (c *Core) parse(ctx context.Context, container Container) error {
 		case msg := <-container.Logs():
 			record := Record{
 				ID:        c.uuid.New(),
+				Name:      sourceName,
 				Body:      msg,
 				CreatedAt: c.clock.Now(),
 			}
