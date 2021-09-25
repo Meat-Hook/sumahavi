@@ -12,4 +12,4 @@ var _ core.Clock = &Service{}
 type Service struct{}
 
 // Now implements core.Clock.
-func (s *Service) Now() time.Time { panic("implement me") }
+func (s *Service) Now() time.Time { return time.Now() }
