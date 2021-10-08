@@ -1,3 +1,2 @@
-// Package source contains implementation for core.Source.
-// It collects 'files' for parsing log journal.
+// Package source contains helpers for core.Source plugins.
 package source

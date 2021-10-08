@@ -28,32 +28,6 @@ type Tokenizer interface {
 	Tokens(json.RawMessage) ([]Token, error)
 }
 
-// Container contains log file.
-type Container interface {
-	// Logs returns channel for collecting log lines.
-	//
-	// If you don't read this channel parser won't parse data.
-	//
-	// This method must be called. Repeated calls returns the same channel.
-	// Returned channel is non-blocking on send, closes by Close.
-	//
-	// Errors: Any, io.EOF, ErrNotFound.
-	Logs() <-chan json.RawMessage
-	// Err returns channel for listening errors.
-	//
-	// This method must be called. Repeated calls returns the same channel.
-	// Returned channel is non-blocking on send, closes by Close.
-	//
-	// If you get error from this channel, all channels will close.
-	// Only one msg.
-	//
-	// Errors: Any, io.EOF.
-	Err() <-chan error
-	// Close container. You shouldn't use Container after close.
-	// Also, it will close all channels returned by other methods.
-	Close()
-}
-
 // Store responsible for saving log data on source.
 // Contains data on source.
 type Store interface {
@@ -78,20 +52,22 @@ type Source interface {
 	Name() string
 	// Close source. You shouldn't use Source after close.
 	// Also, it will close all channels returned by other methods.
+	//
+	// You can repeat it after first call this method.
 	Close()
-	// New returns channel for listening event about new Container.
+	// Logs returns channel for collecting log lines.
+	//
+	// If you don't read this channel parser won't parse data.
 	//
 	// This method must be called. Repeated calls returns the same channel.
 	// Returned channel is non-blocking on send, closes by Close.
-	New() <-chan Container
-	// Err returns channel for listening errors from source space.
 	//
-	// This method must be called. Repeated calls returns the same channel.
-	// Returned channel is non-blocking on send, closes by Close.
+	// Errors: Any, io.EOF, ErrNotFound.
+	Logs() <-chan json.RawMessage
+	// Err returns last getting errors.
 	//
-	// If you get error from this channel, all channels from Disk will close.
-	// Only one msg.
+	// Can be nil.
 	//
 	// Errors: Any.
-	Err() chan error
+	Err() error
 }

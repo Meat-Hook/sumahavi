@@ -8,7 +8,10 @@ import (
 )
 
 // Token contains one token for making inverted index by terms.
-type Token string
+type Token struct {
+	Field string
+	Term  string
+}
 
 // Record contains all information about log line.
 type Record struct {
