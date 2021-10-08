@@ -43,7 +43,7 @@ type Store interface {
 	// Search log data by some terms.
 	//
 	// Errors: Any, ErrNotFound.
-	Search(ctx context.Context, terms []Token, limit, offset int) ([]Record, error)
+	Search(ctx context.Context, terms []string, limit, offset int) ([]Record, error)
 }
 
 // Source responsible for getting log journal.

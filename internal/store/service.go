@@ -14,7 +14,7 @@ var _ core.Store = &Service{}
 type Service struct{}
 
 // Search implements core.Store.
-func (s *Service) Search(ctx context.Context, terms []core.Token, limit, offset int) ([]core.Record, error) {
+func (s *Service) Search(ctx context.Context, terms []string, limit, offset int) ([]core.Record, error) {
 	panic("implement me")
 }
 
